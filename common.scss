@@ -1,0 +1,131 @@
+// 入れ子構造はこのように記述
+aside {
+    ul {
+        list-style: none;
+
+        li {
+            color: red;
+        }
+    }
+}
+
+
+
+//変数に代入して使いまわす
+$base-color: #aaaaaa;
+$sub-color: red;
+
+nav {
+    ul {
+        li {
+            color: $base-color;
+        }
+    }
+}
+
+
+
+//関数のようなもの
+@mixin textColor {
+    color: blue;
+}
+@mixin border($color: red) {
+    //引数も指定できる
+    border: 1px solid $color;
+}
+#fnTest {
+    @include textColor; //これで呼び出せる
+    @include border(black);
+}
+
+
+
+//スタイルの継承
+//これだと使わずともboxがcssにできてしまうが%boxとするとcssには作られない(mixinと同じ)
+.box {
+    width: 100px;
+    height: 100px;
+    background-color: blue;
+    color: red;
+}
+.subBox {
+    @extend .box; //これで継承できる
+    border: solid 5px black;
+}
+
+
+
+//メディアクエリの指定
+//mixinとcontentの合わせ技
+$pc: 1040px;
+$mobile: 740px;
+
+@mixin pc {
+    @media (max-width: ($pc)) {
+        @content; //@include pc { ここが@contentに代入される }
+    }
+}
+@mixin mobile {
+    @media (max-width: ($mobile)) {
+        @content;
+    }
+}
+
+body {
+    @include pc {
+        background-color: red; //@contentに代入される
+    };
+    @include mobile {
+        background-color: black; //@contentに代入される
+    };
+}
+
+
+
+//疑似要素の書き方
+h2 {
+    a {
+        color: gray;
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+}
+
+
+
+//便利な&の使い方
+
+//&は親セレクターを表す
+#test {
+    ul {
+        list-style: none;
+
+        li {
+            color: gray;
+
+            &#is-select {
+                //& = li
+                //#test の ul の li のその中の #is-select
+                color: hotpink;
+            }
+        }
+    }
+}
+
+//&は親セレクターを表すことを利用して
+.thirdBox {
+    width: 300px;
+    height: 300px;
+    background-color: blue;
+    color: red;
+
+    &-content {
+        // & = thirdBox だから
+        margin: 0 auto;
+        width: 260px;
+        height: 100px;
+        background-color: blueviolet;
+        color: cadetblue;
+    }
+}
